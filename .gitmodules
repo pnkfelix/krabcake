@@ -1,0 +1,3 @@
+[submodule "krabcake-vg"]
+	path = krabcake-vg
+	url = git@github.com:pnkfelix/krabcake-vg.git
