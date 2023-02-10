@@ -1,0 +1,26 @@
+Short version for non-lawyers:
+
+The Krabcake Project is dual-licensed under Apache 2.0 and MIT
+terms.
+
+
+Longer version:
+
+Copyrights in the Krabcake project are retained by their contributors. No
+copyright assignment is required to contribute to the Krabcake project.
+
+Some files include explicit copyright notices and/or license notices.
+For full authorship information, see the version control history or
+the THANKS file.
+
+Except as otherwise noted (below and/or in individual files), Krabcake is
+licensed under the Apache License, Version 2.0 <LICENSE-APACHE> or
+<http://www.apache.org/licenses/LICENSE-2.0> or the MIT license
+<LICENSE-MIT> or <http://opensource.org/licenses/MIT>, at your option.
+
+The Krabcake Project includes packages written by third parties.
+The following third party packages are included, and carry
+their own copyright notices and license terms:
+
+* Valgrind, located in the krabcake-vg/ directory, is licensed under GNU GPL v2,
+  as described in the file krabcake-vg/COPYING
