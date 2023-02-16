@@ -1,1 +1,5 @@
 Demo code still very much under construction.
+
+Clone this repo including submodules.
+
+Build with `make go -j128`
