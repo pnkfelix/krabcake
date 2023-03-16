@@ -8,6 +8,7 @@ VG_LIBEXEC := $(ROOT_DIR)libexec/valgrind
 VG_INCL := $(VG_SRC_ROOT)/include
 KC_INCL := $(VG_SRC_ROOT)/krabcake
 KC_SRC  := $(VG_SRC_ROOT)/krabcake
+KC_RS   := $(VG_SRC_ROOT)/krabcake/rs_hello/* $(VG_SRC_ROOT)/krabcake/rs_hello/src/*
 KC_BINS := $(VG_LIBEXEC)/krabcake-x86-linux $(VG_LIBEXEC)/krabcake-amd64-linux
 
 INCLUDE_OPTS := -I$(KC_INCL) -I$(VG_INCL)
@@ -28,6 +29,6 @@ sb_in_c: sb_in_c.c $(INCLUDE_HDRS)
 go: sb_in_c $(KC_BINS)
 	export VALGRIND_LIB=$(VG_LIBEXEC); ./bin/valgrind --tool=krabcake ./sb_in_c
 
-$(KC_BINS): $(INCLUDE_HDRS) $(KC_SRC)/*
+$(KC_BINS): $(INCLUDE_HDRS) $(KC_SRC)/* $(KC_RS)
 	cd $(VG_SRC_ROOT) && $(MAKE)
 	cd $(VG_SRC_ROOT) && $(MAKE) install
