@@ -2,7 +2,7 @@
 #include "krabcake.h"
 
 int main() {
-    printf("Hello world!\n");
+    printf("Hello world (from `sb_in_c.c`)!\n");
 
     char val = (char)1;
     char *x = KC_BORROW_MUT(char, val); // x = &mut val;
