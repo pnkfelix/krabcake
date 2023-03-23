@@ -48,6 +48,11 @@ macro_rules! kc_borrow_mut {
         {
             let place = ::std::ptr::addr_of_mut!($data);
             let raw_ptr = valgrind_do_client_request_expr!(place, crate::krabcake::VgKrabcakeClientRequest::BorrowMut, place, 0x91, 0x92, 0x93, 0x94);
+            // When the necessary rustc machinery is all in place, all instances
+            // of `kc_borrow_mut!(PLACE)` will be replaced with `&mut PLACE`.
+            // Therefore, we go ahead and convert the `&raw` place above into an
+            // `&mut`, so that the appropriate type is inferred for the
+            // expression.
             unsafe { &mut *raw_ptr }
         }
     }
