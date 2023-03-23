@@ -59,25 +59,22 @@ macro_rules! kc_borrow_mut {
 }
 
 pub fn main() {
-    unsafe {
-        println!("Hello world!");
+    println!("Hello world!");
 
-        let mut val: u8 = 1;
-        let x = kc_borrow_mut!(val); // x = &mut val;
-        let y = kc_borrow_mut!(*x);
+    let mut val: u8 = 1;
+    let x = kc_borrow_mut!(val); // x = &mut val;
+    let y = kc_borrow_mut!(*x);
 
-        println!("before *y = 5, val: {}", val);
-        *y = 5;
-        println!("after *y = 5, val: {}", val);
+    println!("before *y = 5, val: {}", val);
+    *y = 5;
+    println!("after *y = 5, val: {}", val);
 
-        println!("before *x = 3, val: {}", val);
-        // Write through a pointer aliasing `y`
-        *x = 3;
-        println!("after *x = 3, val: {}", val);
+    println!("before *x = 3, val: {}", val);
+    // Write through a pointer aliasing `y`
+    *x = 3;
+    println!("after *x = 3, val: {}", val);
 
-        let end = *y;
+    let end = *y;
 
-        println!("Goodbye world, end: {}!", end);
-    }
+    println!("Goodbye world, end: {}!", end);
 }
-
