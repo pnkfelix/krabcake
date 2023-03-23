@@ -1,5 +1,4 @@
 mod krabcake;
-use krabcake::VgKrabcakeClientRequest;
 
 #[repr(C)]
 struct Data<T> {
