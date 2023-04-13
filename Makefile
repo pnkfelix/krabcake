@@ -19,7 +19,7 @@ SB_RS_DIR := $(ROOT_DIR)/$(SB_RS_CRATE_NAME)
 SB_RS_DBG := $(SB_RS_DIR)/target/debug/$(SB_RS_CRATE_NAME)
 SB_RS_REL := $(SB_RS_DIR)/target/release/$(SB_RS_CRATE_NAME)
 
-all: $(SB_RS_DBG) $(SB_RS_REL) sb_in_c
+all: $(SB_RS_DBG) $(SB_RS_REL)
 
 info: Makefile
 	$(info ROOT_DIR is $(ROOT_DIR))
@@ -27,9 +27,6 @@ info: Makefile
 $(VG_INCL)/valgrind.h: $(VG_INCL)/valgrind.h.in $(VG_SRC_ROOT)/configure.ac $(VG_SRC_ROOT)/Makefile.am $(VG_SRC_ROOT)/Makefile.*.am $(VG_SRC_ROOT)/*/Makefile.am
 	cd $(VG_SRC_ROOT) && ./autogen.sh
 	cd $(VG_SRC_ROOT) && ./configure --prefix=$(ROOT_DIR)
-
-sb_in_c: sb_in_c.c $(INCLUDE_HDRS)
-	$(CC) -o $@ $< $(INCLUDE_OPTS)
 
 $(SB_RS_REL): $(SB_RS_DIR)/* $(SB_RS_DIR)/src/*
 	cd $(SB_RS_DIR) && cargo build --release
@@ -39,8 +36,7 @@ $(SB_RS_DBG): $(SB_RS_DIR)/* $(SB_RS_DIR)/src/*
 
 taret/debug/sb_in_rust: sb_rs_port/* sb_rs_port/src/*
 
-go: sb_in_c $(SB_RS_DBG) $(SB_RS_REL) $(KC_BINS)
-	export VALGRIND_LIB=$(VG_LIBEXEC); ./bin/valgrind --tool=krabcake ./sb_in_c
+go: $(SB_RS_DBG) $(SB_RS_REL) $(KC_BINS)
 	export VALGRIND_LIB=$(VG_LIBEXEC); ./bin/valgrind --tool=krabcake $(SB_RS_DBG)
 	export VALGRIND_LIB=$(VG_LIBEXEC); ./bin/valgrind --tool=krabcake $(SB_RS_REL)
 
