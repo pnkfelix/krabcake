@@ -64,7 +64,7 @@ macro_rules! kc_borrow_mut {
 }
 
 pub fn main() {
-    println!("Hello world!");
+    println!("Hello world (from sb_rs_port/main.rs)!");
 
     let mut val: u8 = 1;
     let x = kc_borrow_mut!(val); // x = &mut val;
