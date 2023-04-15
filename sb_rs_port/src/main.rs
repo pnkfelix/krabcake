@@ -67,7 +67,9 @@ pub fn main() {
     println!("Hello world (from sb_rs_port/main.rs)!");
 
     let mut val: u8 = 1;
+    println!("before x = kc_borrow_mut!(val), val: {}", val);
     let x = kc_borrow_mut!(val); // x = &mut val;
+    println!("before y = kc_borrow_mut!(val), val: {}", val);
     let y = kc_borrow_mut!(*x);
 
     println!("before *y = 5, val: {}", val);
