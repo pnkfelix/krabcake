@@ -64,24 +64,28 @@ macro_rules! kc_borrow_mut {
 }
 
 pub fn main() {
-    println!("Hello world (from sb_rs_port/main.rs)!");
+    println!(
+        "Hello world (from `sb_rs_port/main.rs`)! BorrowMut is {:x}",
+        krabcake::VgKrabcakeClientRequest::BorrowMut as u32
+    );
 
-    let mut val: u8 = 1;
-    println!("before x = kc_borrow_mut!(val), val: {}", val);
+    let mut val: u8 = 101;
+
     let x = kc_borrow_mut!(val); // x = &mut val;
-    println!("before y = kc_borrow_mut!(val), val: {}", val);
+
     let y = kc_borrow_mut!(*x);
 
-    println!("before *y = 5, val: {}", val);
-    *y = 5;
-    println!("after *y = 5, val: {}", val);
+    *y = 105;
 
-    println!("before *x = 3, val: {}", val);
     // Write through a pointer aliasing `y`
-    *x = 3;
-    println!("after *x = 3, val: {}", val);
+    *x = 103;
 
-    let end = *y;
+    let mut end = *y;
 
+    end += 1;
+
+    // Note: I didn't see a load against `y` above without a use
+    // of `end` here. It would be nice to avoid requiring that,
+    // but maybe such is life in release mode. Look into it.
     println!("Goodbye world, end: {}!", end);
 }
