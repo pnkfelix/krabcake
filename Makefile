@@ -38,7 +38,7 @@ taret/debug/sb_in_rust: sb_rs_port/* sb_rs_port/src/*
 
 go: $(SB_RS_DBG) $(SB_RS_REL) $(KC_BINS)
 #	export VALGRIND_LIB=$(VG_LIBEXEC); ./bin/valgrind --tool=krabcake $(SB_RS_DBG)
-	export VALGRIND_LIB=$(VG_LIBEXEC); ./bin/valgrind --tool=krabcake $(SB_RS_REL)
+	export VALGRIND_LIB=$(VG_LIBEXEC); ./bin/valgrind -q --tool=krabcake $(SB_RS_REL)
 
 $(KC_BINS): $(INCLUDE_HDRS) $(KC_SRC)/* $(KC_RS)
 	cd $(VG_SRC_ROOT) && $(MAKE)
