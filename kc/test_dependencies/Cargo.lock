@@ -3,5 +3,5 @@
 version = 3
 
 [[package]]
-name = "sb_rs_port"
+name = "test_dependencies"
 version = "0.1.0"
