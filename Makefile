@@ -19,6 +19,9 @@ all: $(SB_RS_DBG) $(SB_RS_REL)
 info: Makefile
 	$(info ROOT_DIR is $(ROOT_DIR))
 
+$(VG_INCL)/valgrind.h.in:
+	git submodule update --init
+
 $(VG_INCL)/valgrind.h: $(VG_INCL)/valgrind.h.in $(VG_SRC_ROOT)/configure.ac $(VG_SRC_ROOT)/Makefile.am $(VG_SRC_ROOT)/Makefile.*.am $(VG_SRC_ROOT)/*/Makefile.am
 	cd $(VG_SRC_ROOT) && ./autogen.sh
 	cd $(VG_SRC_ROOT) && ./configure --prefix=$(ROOT_DIR)
