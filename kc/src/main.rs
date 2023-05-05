@@ -1,7 +1,8 @@
 use std::path::Path;
 
 use clap::Parser;
-use ui_test::{Config, CommandBuilder, OutputConflictHandling, Mode};
+use regex::bytes::Regex;
+use ui_test::{Config, CommandBuilder, OutputConflictHandling, Mode, Match};
 
 /// Krabcake test runner
 #[derive(Parser, Debug)]
@@ -15,6 +16,7 @@ fn main() {
     let args = Args::parse();
 
     let program = CommandBuilder::cmd("./runner.py");
+    let regex = Regex::new(r"\S*?(--\d+--|==\d+==)\s*").unwrap();
 
     let config = Config {
         quiet: true,
@@ -27,6 +29,7 @@ fn main() {
         } else {
             OutputConflictHandling::Error
         },
+        stderr_filters: vec![(Match::Regex(regex), b"")],
         dependencies_crate_manifest_path: Some(Path::new("test_dependencies").join("Cargo.toml")),
         ..Config::default()
     };

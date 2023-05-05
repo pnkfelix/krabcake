@@ -1,6 +1,6 @@
 Hello world (from `rs_hello/src/lib.rs`)!
---71819-- kc_main.c: dispatching code 4b430000
---71819-- lib.rs: handle client request BORROW_MUT 0x1ffefff8df
-Add64Add64Add64--71819-- kc_main.c: dispatching code 4b430000
---71819-- lib.rs: handle client request BORROW_MUT 0x1ffefff8df
-Add64Add64==71819== ALERT no stack for address 0x1ffefff840 even though we are accessing it via pointer with tag 2
+kc_main.c: dispatching code 4b430000
+lib.rs: handle client request BORROW_MUT 0x1ffefff88f
+kc_main.c: dispatching code 4b430000
+lib.rs: handle client request BORROW_MUT 0x1ffefff88f
+ALERT no stack for address 0x1ffefff7f0 even though we are accessing it via pointer with tag 2

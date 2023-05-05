@@ -7,5 +7,6 @@ edition = "2021"
 
 [dependencies]
 clap = { version = "4.2.7", features = ["derive"] }
+regex = "1.8.1"
 #ui_test = "0.8.2"
 ui_test = { git = "https://github.com/bryangarza/ui_test.git", branch = "env_var_for_test_run" }
