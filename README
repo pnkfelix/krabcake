@@ -3,3 +3,17 @@ Demo code still very much under construction.
 Clone this repo including submodules.
 
 Build with `make go -j128`
+
+## UI Tests
+UI tests are handled by the `kc` crate.
+
+For example, you can simply use:
+```
+cargo run
+```
+inside the `kc` `directory to run all the tests in `kc/tests`.
+
+If you need to bless the output:
+```
+cargo run -- --bless
+```

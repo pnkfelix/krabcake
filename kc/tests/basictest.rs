@@ -1,4 +1,4 @@
-mod krabcake;
+use test_dependencies::VgKrabcakeClientRequest;
 
 #[repr(C)]
 struct Data<T> {
@@ -48,7 +48,7 @@ macro_rules! kc_borrow_mut {
         let place = &mut $data;
         let raw_ptr = valgrind_do_client_request_expr!(
             place as *mut u8,
-            crate::krabcake::VgKrabcakeClientRequest::BorrowMut,
+            VgKrabcakeClientRequest::BorrowMut,
             place as *mut u8,
             0x91,
             0x92,
@@ -72,9 +72,8 @@ macro_rules! kc_borrow_mut {
 }
 
 pub fn main() {
-    use krabcake::VgKrabcakeClientRequest as ClientRequest;
     println!("Hello world (from `sb_rs_port/main.rs`)!");
-    println!("BorrowMut is {:x}", ClientRequest::BorrowMut as u32);
+    println!("BorrowMut is {:x}", VgKrabcakeClientRequest::BorrowMut as u32);
 
     let mut val: u8 = 101;
     let x = kc_borrow_mut!(val); // x = &mut val;
