@@ -1,4 +1,12 @@
-.PHONY: all info go
+.PHONY: all info go test
+
+# In case you are not familiar with `make`: the .PHONY stuff is a way
+# to tag a target T so that if you ever do `make T`, the recipe for T
+# will run *regardless* of whether a file named T happens to exist.
+# (Normally, if the file T existed and the rule had no prerequisites
+# to compare against, then the recipe would not be run.)
+
+
 
 ROOT_DIR := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
 
@@ -21,15 +29,43 @@ INCLUDE_HDRS = $(VG_INCL)/valgrind.h $(KC_INCL)/krabcake.h $(wildcard $(VG_INCL)
 
 all: $(SB_RS_DBG) $(SB_RS_REL)
 
+# This is just some space to do some makefile debugging; run `make
+# info` to see it print out.
 info: Makefile
 	$(info ROOT_DIR is $(ROOT_DIR))
 
-%/configure %/include/valgrind.h.in: %/configure.ac $(VG_MAKEFILE_AMS) $(VG_TOOL_MAKEFILE_AMS)
+# pnkfelix could not figure out a clean way to get the Makefile to
+# automatically update the submodules for us; the files themselves
+# being absent before you run the command is almost certainly part of
+# the reason this is tricky. So, instead of worrying about making that
+# step automatic, lets just issue a nice message when it is clearly
+# the missing step that the user need to do.
+$(VG_SRC_ROOT)/configure.ac $(VG_MAKEFILE_AMS) $(VG_TOOL_MAKEFILE_AMS):
+	@echo 'You need to run `git submodule update --init` before you run `make`.'
+	@false
+
+### Note: if I ever get tempted to try to encode recipes that generate
+### more than one file, the *only* way to properly do it is via
+### wildcare rules, e.g.
+#
+# %/target1 %/target2: %/source-file
+#
+### (At some point I had erronously thought that autogen.sh was
+### creating both the configure *and* the valgrind.h.in, which led
+### down some very bad/confusing paths.)
+
+$(VG_SRC_ROOT)/configure: $(VG_SRC_ROOT)/configure.ac $(VG_MAKEFILE_AMS) $(VG_TOOL_MAKEFILE_AMS)
 	cd $(VG_SRC_ROOT) && ./autogen.sh
 
-$(VG_INCL)/valgrind.h: $(VG_SRC_ROOT)/configure $(VG_INCL)/valgrind.h.in
+$(VG_SRC_ROOT)/include/valgrind.h: $(VG_SRC_ROOT)/configure $(VG_SRC_ROOT)/include/valgrind.h.in
 	cd $(VG_SRC_ROOT) && ./configure --prefix=$(ROOT_DIR)
 
+test: $(KC_BINS)
+	cd kc && cargo run
+
+# Originally `make go` had a demo file associated with it. And I want to
+# make that the case again, once we have the whole pipeline set up with
+# a patched rustc
 go: $(KC_BINS)
 
 $(KC_BINS): $(INCLUDE_HDRS) $(wildcard $(KC_SRC)/*) $(KC_RS)
