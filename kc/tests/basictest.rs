@@ -41,27 +41,43 @@ macro_rules! valgrind_do_client_request_expr {
     }
 }
 
+// When the necessary rustc machinery is all in place, all instances
+// of `kc_borrow_mut!(PLACE)` will be replaced with `&mut PLACE`.
 #[macro_export]
 macro_rules! kc_borrow_mut {
     ( $data:expr ) => {{
         // let place = ::std::ptr::addr_of_mut!($data);
-        let place = &mut $data;
-        let raw_ptr = valgrind_do_client_request_expr!(
-            place as *mut u8,
+        let mut place = &mut $data; // do the borrow, but pass along the
+                                    // *location* of where we are keeping
+                                    // that borrow up to valgrind.
+        let place_ptr = place as *mut u8;
+        let stash = &mut place;
+        /*
+                println!(
+                    "pre_ place: {:?} stash: {:?}",
+                    place_ptr, stash as *mut &mut u8
+                );
+        */
+        let _ignored = valgrind_do_client_request_expr!(
+            0x90, // we return this if we are not running under valgrind
             VgKrabcakeClientRequest::BorrowMut,
-            place as *mut u8,
+            stash as *mut &mut u8, // we pass this up to valgrind
             0x91,
             0x92,
             0x93,
             0x94
         );
-        // When the necessary rustc machinery is all in place, all instances
-        // of `kc_borrow_mut!(PLACE)` will be replaced with `&mut PLACE`.
-        // Therefore, we go ahead and convert the `&raw` place above into an
-        // `&mut`, so that the appropriate type is inferred for the
-        // expression.
+        /*
+                println!(
+                    "post place: {:?} stash: {:?}",
+                    place_ptr, stash as *mut &mut u8
+                );
+        */
         if true {
-            unsafe { &mut *raw_ptr }
+            // We load the borrow out from the memory location in `stash`, so that any tags
+            // that the tool now associated with that memory location via `stash` will be
+            // propagated along.
+            unsafe { ::std::ptr::read(stash) }
         } else {
             // However, we return the original `&mut` on a false branch,
             // to force the lifetimes on the `&mut` above to match what
@@ -73,7 +89,10 @@ macro_rules! kc_borrow_mut {
 
 pub fn main() {
     println!("Hello world (from `sb_rs_port/main.rs`)!");
-    println!("BorrowMut is {:x}", VgKrabcakeClientRequest::BorrowMut as u32);
+    println!(
+        "BorrowMut is {:x}",
+        VgKrabcakeClientRequest::BorrowMut as u32
+    );
 
     let mut val: u8 = 101;
     let x = kc_borrow_mut!(val); // x = &mut val;
