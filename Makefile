@@ -54,8 +54,26 @@ $(VG_SRC_ROOT)/configure.ac $(VG_MAKEFILE_AMS) $(VG_TOOL_MAKEFILE_AMS):
 ### creating both the configure *and* the valgrind.h.in, which led
 ### down some very bad/confusing paths.)
 
-$(VG_SRC_ROOT)/configure: $(VG_SRC_ROOT)/configure.ac $(VG_MAKEFILE_AMS) $(VG_TOOL_MAKEFILE_AMS)
-	cd $(VG_SRC_ROOT) && ./autogen.sh
+# This is not quite right; it runs autogen.sh which rebuilds a bunch more stuff.
+%/configure: %/configure.ac
+	echo Rerunning autogen.sh to rebuild $@ due to $?
+	cd $* && ./autogen.sh
+
+%/krabcake/Makefile.in: %/krabcake/Makefile.am
+	echo Rerunning automake to rebuild $@ due to $?
+	cd $* && automake -a
+
+# $(VG_MAKEFILE_AMS) $(VG_TOOL_MAKEFILE_AMS)
+
+### %/aclocal.m4: %/configure.ac
+### 	cd $* && aclocal
+### 
+### %/Makefile.in: %/Makefile.am
+### 	cd $* && autoheader
+### 	cd $* && automake -a
+### 
+### %/configure: %/configure.ac
+### 	cd $* && autoconf
 
 $(VG_SRC_ROOT)/include/valgrind.h: $(VG_SRC_ROOT)/configure $(VG_SRC_ROOT)/include/valgrind.h.in
 	cd $(VG_SRC_ROOT) && ./configure --prefix=$(ROOT_DIR)
