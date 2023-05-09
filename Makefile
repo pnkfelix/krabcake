@@ -85,6 +85,8 @@ test: $(KC_BINS)
 # make that the case again, once we have the whole pipeline set up with
 # a patched rustc
 go: $(KC_BINS)
+	rustc -C opt-level=2 baseline.rs
+	./bin/valgrind -q --tool=krabcake ./baseline
 
 $(KC_BINS): $(INCLUDE_HDRS) $(wildcard $(KC_SRC)/*) $(KC_RS)
 	cd $(VG_SRC_ROOT) && $(MAKE) && $(MAKE) install
