@@ -50,12 +50,12 @@ macro_rules! kc_borrow_mut {
         let mut place = &mut $data; // do the borrow, but pass along the
                                     // *location* of where we are keeping
                                     // that borrow up to valgrind.
-        let place_ptr = place as *mut u8;
+        let _place_ptr = place as *mut u8;
         let stash = &mut place;
         /*
                 println!(
                     "pre_ place: {:?} stash: {:?}",
-                    place_ptr, stash as *mut &mut u8
+                    _place_ptr, stash as *mut &mut u8
                 );
         */
         let _ignored = valgrind_do_client_request_expr!(
@@ -70,7 +70,7 @@ macro_rules! kc_borrow_mut {
         /*
                 println!(
                     "post place: {:?} stash: {:?}",
-                    place_ptr, stash as *mut &mut u8
+                    _place_ptr, stash as *mut &mut u8
                 );
         */
         if true {
