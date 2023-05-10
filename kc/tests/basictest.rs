@@ -1,7 +1,7 @@
 use test_dependencies::VgKrabcakeClientRequest;
 
 #[repr(C)]
-struct Data<T> {
+pub(crate) struct Data<T> {
     request_code: u64,
     arg1: *mut T,
     arg2: u64,
