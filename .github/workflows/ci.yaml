@@ -12,9 +12,7 @@ jobs:
     steps:
       - name: Check out code    
         uses: actions/checkout@v3
-      - name: Install Rust toolchain
-        uses: actions-rs/toolchain@v1
         with:
-          toolchain: stable
+          submodules: true
       - name: Build
         run: make go
