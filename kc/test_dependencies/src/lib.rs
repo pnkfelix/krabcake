@@ -31,7 +31,7 @@ macro_rules! valgrind_do_client_request_expr {
     ( $zzq_default:expr, $request_code:expr,
       $arg1:expr, $arg2:expr, $arg3:expr, $arg4:expr, $arg5:expr ) => {
         {
-            let zzq_args = crate::Data {
+            let zzq_args = Data {
                 request_code: $request_code as u64,
                 arg1: $arg1,
                 arg2: $arg2,

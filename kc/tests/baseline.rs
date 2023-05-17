@@ -1,6 +1,4 @@
-use test_dependencies::{
-    kc_borrow_mut, valgrind_do_client_request_expr, Data, VgKrabcakeClientRequest,
-};
+use test_dependencies::*;
 
 pub fn main() {
     println!("Hello world (from `sb_rs_port/main.rs`)!");

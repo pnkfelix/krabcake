@@ -11,6 +11,8 @@ struct Args {
     /// Write .stderr and .stdout files
     #[arg(long)]
     bless: bool,
+    #[arg(long)]
+    filter: Option<String>,
 }
 fn main() {
     let args = Args::parse();
@@ -18,7 +20,7 @@ fn main() {
     let program = CommandBuilder::cmd("./runner.py");
     let regex = Regex::new(r"\S*?(--\d+--|==\d+==)\s*").unwrap();
 
-    let config = Config {
+    let mut config = Config {
         quiet: true,
         root_dir: "tests".into(),
         out_dir: Some("./build".into()),
@@ -32,6 +34,9 @@ fn main() {
         stderr_filters: vec![(Match::Regex(regex), b"")],
         dependencies_crate_manifest_path: Some(Path::new("test_dependencies").join("Cargo.toml")),
         ..Config::default()
+    };
+    if let Some(filter) = args.filter {
+        config.path_filter = vec![filter];
     };
     ui_test::run_tests(config).unwrap();
 }
