@@ -2,7 +2,7 @@ use std::path::Path;
 
 use clap::Parser;
 use regex::bytes::Regex;
-use ui_test::{Config, CommandBuilder, OutputConflictHandling, Mode, Match};
+use ui_test::{CommandBuilder, Config, Match, Mode, OutputConflictHandling};
 
 /// Krabcake test runner
 #[derive(Parser, Debug)]
@@ -25,7 +25,7 @@ fn main() {
         mode: Mode::Pass,
         program,
         output_conflict_handling: if args.bless {
-             OutputConflictHandling::Bless
+            OutputConflictHandling::Bless
         } else {
             OutputConflictHandling::Error
         },
