@@ -1,0 +1,13 @@
+Hello world (from `sb_rs_port/main.rs`)!
+BorrowMut is 4b430000
+about to &mut into x
+borrowed &mut val into x
+made alias of x in x_alias
+about to &mut into y
+borrowed &mut val into y
+about to mutate val via y
+finished mutate val via y
+about to mutate val via x_alias
+finished mutate val via x_alias
+about to read val via y
+Goodbye world, end: 103!
