@@ -7,7 +7,7 @@ macro_rules! kc_borrow_mut {
         let mut place = &mut $data; // do the borrow, but pass along the
                                     // *location* of where we are keeping
                                     // that borrow up to valgrind.
-        let _place_ptr = place as *mut u8;
+        let _place_ptr = place as *mut _ as *mut u8;
         let stash = &mut place;
         /*
                 println!(
@@ -17,8 +17,8 @@ macro_rules! kc_borrow_mut {
         */
         let _ignored = test_dependencies::valgrind_do_client_request_expr!(
             0x90, // we return this if we are not running under valgrind
-            VgKrabcakeClientRequest::BorrowMut,
-            stash as *mut &mut u8, // we pass this up to valgrind
+            test_dependencies::VgKrabcakeClientRequest::BorrowMut,
+            stash as *mut &mut _ as *mut &mut u8, // we pass this up to valgrind
             0x91,
             0x92,
             0x93,
