@@ -3,7 +3,37 @@
 #[macro_export]
 macro_rules! kc_borrow_mut {
     ( $data:expr ) => {{
-        // let place = ::std::ptr::addr_of_mut!($data);
+	macro_rules! valgrind_do_client_request_expr {
+	    ( $zzq_default:expr, $request_code:expr,
+	      $arg1:expr, $arg2:expr, $arg3:expr, $arg4:expr, $arg5:expr ) => {
+		{
+		    let zzq_args = ::test_dependencies::VgKrabcakeClientRequestData {
+			request_code: $request_code as u64,
+			arg1: $arg1,
+			arg2: $arg2,
+			arg3: $arg3,
+			arg4: $arg4,
+			arg5: $arg5,
+		    };
+		    let mut zzq_result = $zzq_default;
+		    #[allow(unused_unsafe)]
+		    unsafe {
+			::std::arch::asm!(
+			    "rol rdi, 3",
+			    "rol rdi, 13",
+			    "rol rdi, 61",
+			    "rol rdi, 51",
+			    "xchg rbx, rbx",
+			    inout("di") zzq_result,
+			    in("ax") &zzq_args,
+			);
+		    }
+		    zzq_result
+		}
+	    }
+	}
+
+	// let place = ::std::ptr::addr_of_mut!($data);
         let mut place = &mut $data; // do the borrow, but pass along the
                                     // *location* of where we are keeping
                                     // that borrow up to valgrind.
@@ -15,9 +45,9 @@ macro_rules! kc_borrow_mut {
                     _place_ptr, stash as *mut &mut u8
                 );
         */
-        let _ignored = test_dependencies::valgrind_do_client_request_expr!(
+        let _ignored = valgrind_do_client_request_expr!(
             0x90, // we return this if we are not running under valgrind
-            test_dependencies::VgKrabcakeClientRequest::BorrowMut,
+            ::test_dependencies::VgKrabcakeClientRequest::BorrowMut,
             stash as *mut &mut _ as *mut &mut u8, // we pass this up to valgrind
             0x91,
             0x92,
@@ -44,36 +74,6 @@ macro_rules! kc_borrow_mut {
     }};
 }
 
-#[macro_export]
-macro_rules! valgrind_do_client_request_expr {
-    ( $zzq_default:expr, $request_code:expr,
-      $arg1:expr, $arg2:expr, $arg3:expr, $arg4:expr, $arg5:expr ) => {
-        {
-            let zzq_args = test_dependencies::VgKrabcakeClientRequestData {
-                request_code: $request_code as u64,
-                arg1: $arg1,
-                arg2: $arg2,
-                arg3: $arg3,
-                arg4: $arg4,
-                arg5: $arg5,
-            };
-            let mut zzq_result = $zzq_default;
-            #[allow(unused_unsafe)]
-            unsafe {
-                ::std::arch::asm!(
-                    "rol rdi, 3",
-                    "rol rdi, 13",
-                    "rol rdi, 61",
-                    "rol rdi, 51",
-                    "xchg rbx, rbx",
-                    inout("di") zzq_result,
-                    in("ax") &zzq_args,
-                );
-            }
-            zzq_result
-        }
-    }
-}
 
 const fn vg_userreq_tool_base(a: u32, b: u32) -> u32 {
     ((a) & 0xff) << 24 | ((b) & 0xff) << 16
@@ -90,6 +90,9 @@ pub enum VgKrabcakeClientRequest {
     RetagFnPrologue,
     RetagAssign,
     RetagRaw,
+    IntrinsicsAssume,
+    PrintTagOf,
+    PrintStackOf,
     KrabcakeRecordOverlapError = vg_userreq_tool_base('K' as u32, 'C' as u32) + 256,
 }
 
