@@ -1,32 +1,34 @@
-// This is a simple test file that side-steps the ui-test framework
-// and external crates, by importing submodule structure based on
-// knowledge of how the basictest is structured.
-//
-// This is probably an anti-pattern, but it was the easiest way for
-// pnkfelix to make my Makefile useful again for me.
-
-mod test_dependencies {
-    include!("kc/test_dependencies/src/lib.rs");
-}
+use test_dependencies::VgKrabcakeClientRequest;
+use test_dependencies::kc_borrow_mut;
 
 pub fn main() {
     println!("Hello world (from `sb_rs_port/main.rs`)!");
     println!(
         "BorrowMut is {:x}",
-        test_dependencies::VgKrabcakeClientRequest::BorrowMut as u32
+        VgKrabcakeClientRequest::BorrowMut as u32
     );
 
     let mut val: u8 = 101;
+    println!("about to &mut into x");
     let x = kc_borrow_mut!(val); // x = &mut val;
+    println!("borrowed &mut val into x");
     let x_alias = x as *mut u8;
+    println!("made alias of x in x_alias");
+    println!("about to &mut into y");
     let y = kc_borrow_mut!(*x);
+    println!("borrowed &mut val into y");
 
+    println!("about to mutate val via y");
     *y = 105;
+    println!("finished mutate val via y");
 
+    println!("about to mutate val via x_alias");
     unsafe {
         *x_alias = 103;
     }
+    println!("finished mutate val via x_alias");
 
+    println!("about to read val via y");
     let end = *y;
 
     // Note: I didn't see a load against `y` above without a use
@@ -34,4 +36,3 @@ pub fn main() {
     // but maybe such is life in release mode. Look into it.
     println!("Goodbye world, end: {}!", end);
 }
-

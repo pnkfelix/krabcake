@@ -33,5 +33,5 @@ if should_run_valgrind:
         full_path = out_dir_path + "/" + filename
         args[out_dir_index + 1] = full_path
 
-    valgrind_args = ["../bin/valgrind", "-q", "--tool=krabcake", full_path]
+    valgrind_args = ["../bin/valgrind", "-q", "--tool=krabcake", "--normalize-output=yes", full_path]
     subprocess.run(valgrind_args)
