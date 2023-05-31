@@ -1,5 +1,5 @@
-use test_dependencies::VgKrabcakeClientRequest;
 use test_dependencies::kc_borrow_mut;
+use test_dependencies::VgKrabcakeClientRequest;
 
 pub fn main() {
     println!("Hello world (from `sb_rs_port/main.rs`)!");
