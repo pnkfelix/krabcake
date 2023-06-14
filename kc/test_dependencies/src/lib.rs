@@ -3,37 +3,37 @@
 #[macro_export]
 macro_rules! kc_borrow_mut {
     ( $data:expr ) => {{
-	macro_rules! valgrind_do_client_request_expr {
-	    ( $zzq_default:expr, $request_code:expr,
-	      $arg1:expr, $arg2:expr, $arg3:expr, $arg4:expr, $arg5:expr ) => {
-		{
-		    let zzq_args = ::test_dependencies::VgKrabcakeClientRequestData {
-			request_code: $request_code as u64,
-			arg1: $arg1,
-			arg2: $arg2,
-			arg3: $arg3,
-			arg4: $arg4,
-			arg5: $arg5,
-		    };
-		    let mut zzq_result = $zzq_default;
-		    #[allow(unused_unsafe)]
-		    unsafe {
-			::std::arch::asm!(
-			    "rol rdi, 3",
-			    "rol rdi, 13",
-			    "rol rdi, 61",
-			    "rol rdi, 51",
-			    "xchg rbx, rbx",
-			    inout("dx") zzq_result,
-			    in("ax") &zzq_args,
-			);
-		    }
-		    zzq_result
-		}
-	    }
-	}
+        macro_rules! valgrind_do_client_request_expr {
+            ( $zzq_default:expr, $request_code:expr,
+              $arg1:expr, $arg2:expr, $arg3:expr, $arg4:expr, $arg5:expr ) => {
+                {
+                    let zzq_args = ::test_dependencies::VgKrabcakeClientRequestData {
+                        request_code: $request_code as u64,
+                        arg1: $arg1,
+                        arg2: $arg2,
+                        arg3: $arg3,
+                        arg4: $arg4,
+                        arg5: $arg5,
+                    };
+                    let mut zzq_result = $zzq_default;
+                    #[allow(unused_unsafe)]
+                    unsafe {
+                        ::std::arch::asm!(
+                            "rol rdi, 3",
+                            "rol rdi, 13",
+                            "rol rdi, 61",
+                            "rol rdi, 51",
+                            "xchg rbx, rbx",
+                            inout("dx") zzq_result,
+                            in("ax") &zzq_args,
+                        );
+                    }
+                    zzq_result
+                }
+            }
+        }
 
-	// let place = ::std::ptr::addr_of_mut!($data);
+        // let place = ::std::ptr::addr_of_mut!($data);
         let mut place = &mut $data; // do the borrow, but pass along the
                                     // *location* of where we are keeping
                                     // that borrow up to valgrind.
