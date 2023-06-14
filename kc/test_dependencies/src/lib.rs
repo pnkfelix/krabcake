@@ -24,7 +24,7 @@ macro_rules! kc_borrow_mut {
 			    "rol rdi, 61",
 			    "rol rdi, 51",
 			    "xchg rbx, rbx",
-			    inout("di") zzq_result,
+			    inout("dx") zzq_result,
 			    in("ax") &zzq_args,
 			);
 		    }
