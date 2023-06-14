@@ -1,3 +1,55 @@
+use std::ffi::c_char;
+
+// FIXME: it shoudn't be necessary to duplicate the definition of the
+// valgrind_do_client_request_expr macro, but I had trouble dealing with tryign
+// to make a single definition that could handle the various ways one might need
+// to reference the VgKrabcakeClientRequestData struct. Look into the standard
+// ways to address this (perhaps Macros 2.0 or even 1.5 is the answer)
+
+pub fn print_tag_of<T>(name: *const u8, addr: *const T) -> u64 {
+    macro_rules! valgrind_do_client_request_expr {
+        ( $zzq_default:expr, $request_code:expr,
+          $arg1:expr, $arg2:expr, $arg3:expr, $arg4:expr, $arg5:expr ) => {
+            {
+                let zzq_args = VgKrabcakeClientRequestData {
+                    request_code: $request_code as u64,
+                    arg1: $arg1,
+                    arg2: $arg2,
+                    arg3: $arg3,
+                    arg4: $arg4,
+                    arg5: $arg5,
+                };
+                let mut zzq_result = $zzq_default;
+                #[allow(unused_unsafe)]
+                unsafe {
+                    ::std::arch::asm!(
+                        "rol rdi, 3",
+                        "rol rdi, 13",
+                        "rol rdi, 61",
+                        "rol rdi, 51",
+                        "xchg rbx, rbx",
+                        inout("dx") zzq_result,
+                        in("ax") &zzq_args,
+                    );
+                }
+                zzq_result
+            }
+        }
+    }
+
+    let stash = &addr;
+    valgrind_do_client_request_expr!(
+        0x90,
+        VgKrabcakeClientRequest::PrintTagOf,
+        stash as *const _ as *mut u8,
+        name as *const _ as u64,
+        0x92,
+        0x93,
+        0x94
+    )
+}
+
+
 // When the necessary rustc machinery is all in place, all instances
 // of `kc_borrow_mut!(PLACE)` will be replaced with `&mut PLACE`.
 #[macro_export]
