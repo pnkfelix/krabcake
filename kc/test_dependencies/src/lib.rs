@@ -1,12 +1,15 @@
-use std::ffi::c_char;
-
 // FIXME: it shoudn't be necessary to duplicate the definition of the
 // valgrind_do_client_request_expr macro, but I had trouble dealing with tryign
 // to make a single definition that could handle the various ways one might need
 // to reference the VgKrabcakeClientRequestData struct. Look into the standard
 // ways to address this (perhaps Macros 2.0 or even 1.5 is the answer)
 
-pub fn print_tag_of<T>(name: *const u8, addr: *const T) -> u64 {
+pub use self::print_methods::{print_stack_of, print_tag_of};
+
+mod print_methods {
+    use super::VgKrabcakeClientRequest;
+    use super::VgKrabcakeClientRequestData;
+
     macro_rules! valgrind_do_client_request_expr {
         ( $zzq_default:expr, $request_code:expr,
           $arg1:expr, $arg2:expr, $arg3:expr, $arg4:expr, $arg5:expr ) => {
@@ -37,16 +40,31 @@ pub fn print_tag_of<T>(name: *const u8, addr: *const T) -> u64 {
         }
     }
 
-    let stash = &addr;
-    valgrind_do_client_request_expr!(
-        0x90,
-        VgKrabcakeClientRequest::PrintTagOf,
-        stash as *const _ as *mut u8,
-        name as *const _ as u64,
-        0x92,
-        0x93,
-        0x94
-    )
+    pub fn print_tag_of<T>(name: *const u8, addr: *const T) -> u64 {
+        let stash = &addr;
+        valgrind_do_client_request_expr!(
+            0x90,
+            VgKrabcakeClientRequest::PrintTagOf,
+            stash as *const _ as *mut u8,
+            name as *const _ as u64,
+            0x92,
+            0x93,
+            0x94
+        )
+    }
+
+    pub fn print_stack_of<T>(name: *const u8, addr: *const T) -> u64 {
+        let stash = &addr;
+        valgrind_do_client_request_expr!(
+            0x90,
+            VgKrabcakeClientRequest::PrintStackOf,
+            stash as *const _ as *mut u8,
+            name as *const _ as u64,
+            0x92,
+            0x93,
+            0x94
+        )
+    }
 }
 
 
