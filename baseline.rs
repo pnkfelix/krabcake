@@ -20,7 +20,7 @@ pub fn main() {
     let x = kc_borrow_mut!(val); // x = &mut val;
     let x_alias = x as *mut u8;
     let y = kc_borrow_mut!(*x);
-
+    test_dependencies::print_tag_of(b"y\0".as_ptr(), y);
     *y = 105;
 
     unsafe {
