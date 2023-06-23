@@ -3,4 +3,4 @@ Hello world (from `rs_hello/src/lib.rs`)!
 kc_main.c: dispatching code 4b430000
 lib.rs: handle client request BORROW_MUT. borrowing_addr: 0x10000000
 kc_main.c: dispatching code 4b43000a
-print_stack_of `C format sequences are %% %b %q %d %i %o %u %x %X %f %e %E %g %G %c %s` (0x10000000): [Unique(1)]
+print_stack_of `C format sequences are %% %b %q %d %i %o %u %x %X %f %e %E %g %G %c %s` (0x10000000): [Unique(Counter(Counter(1)))]
