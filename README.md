@@ -63,7 +63,7 @@ Krabcake builds upon the Valgrind architecture, with a custom Valgrind tool that
 The overall long-term picture is this:
 
 1. The developer turns on a flag on the Rust compiler that enables Krabcake Sanitation (KSAN) mode. Enabling Krabcake Santitation mode has no effect on the dynamic semantics of the program apart from injecting special sequences of no-op's (see "Valgrind Client Requests" below). The Rust crate can be linked with non-Rust code in the application being constructed and executed.
-2. The developer runs the program atop the Valgrind Krabcake tool. The program is executed, but the tool dynamically rewrites the program to now include dynamic checking of every creation and use of a Rust reference (i.e. `&T` or `&mut T`) to ensure that each reference has permission to access its corresponding memory location at its time of access.
+2. The developer runs the KSAN-itized program atop the Valgrind Krabcake tool. The program is executed, but the tool dynamically rewrites the program to now include dynamic checking of every creation and use of a Rust reference (i.e. `&T` or `&mut T`) to ensure that each reference has permission to access its corresponding memory location at its time of access.
 
 ### Valgrind details
 
