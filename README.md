@@ -35,7 +35,7 @@ If you try to apply Miri to a program that calls an arbitrary foreign function
 (for example a tailored sort routine, `mysort`), Miri will issue an error
 saying that it cannot invoke that foreign function.
 
-Miri’s architecture fundamentally does not support arbitrary foreign functions.
+Miri’s architecture fundamentally does not support arbitrary foreign functions. It also does not support inline assembly. Hypothetically Miri could attempt to interpret inline asm as well as external machine code, but in practice this is unlikely to be tenable.
 
 Therefore, leveraging Miri introduces new constraints on your software architecture:
 
