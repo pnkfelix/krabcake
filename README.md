@@ -85,7 +85,7 @@ The original machine code can include special machine code sequences, called
 
 Krabcake's goal is to validate the program's behavior against the Rust memory model. To do this, we need to extend the standard machine code semantics in two ways:
 
-* Each memory location that is ever borrowed (i.e. is the target of a Rust reference, `&` or `&mut`) needs its own extra state (a *stack of items* in the [Stacked Borrows][] model)
+* Each memory location that is ever borrowed (i.e. is the target of a Rust reference, `&` or `&mut`) needs its own extra state (an  *item-stack* in the [Stacked Borrows][] model)
 * Each Rust reference, or pointer value derived from a Rust reference, needs a *tag* (a kind of timestamp) that tracks when that reference was created.
 
 [Stacked Borrows]: https://plv.mpi-sws.org/rustbelt/stacked-borrows/
@@ -102,7 +102,7 @@ Any part of the machine state that can carry an address (i.e. a register or a me
 currently represented as a key/value table), and operations that consume those addresses (such as basic mathematical operations which may be performing pointer
 arithmetic) likewise pass those tags alongside into their computed results.
 
-Similarly, every memory address is also potentially mapped to a stack-of-items by a similar key/value table. Maintenance of this state is much simpler than that of tags,
+Similarly, every memory address is also potentially mapped to an item-stack by a similar key/value table. Maintenance of this state is much simpler than that of tags,
 because these stacks do not flow around during computations the same way that tags do.
 
 
@@ -135,7 +135,7 @@ Project layout diagram:
 |
 +-- README: this file
 |
-+-- krabcake-vg/: our fork of Valgrind that carries the krabcake tool
++-- krabcake-vg/ (git submodule): fork of Valgrind that carries krabcake tool
 |   |
 |   +-- coregrind/: C source code for Valgrind's shared core logic
 |   |
@@ -143,7 +143,7 @@ Project layout diagram:
 |       |
 |       +-- rs_hello/: Rust code statically linked to the Valgrind krabcake tool
 |       |
-|       +-- kc_main.c: C source for tool; contains 1. entry point, 2. VEX-to-VEX transformation (that sometimes injects dispatch to functions in rs_hello/), and 3. client request that always dispatch to routines in rs_hello/.
+|       +-- kc_main.c: C source for tool
 |
 +-- kc/: this is a Rust crate that holds our regression tests for Krabcake
 |   |
@@ -152,6 +152,9 @@ Project layout diagram:
 |   +-- runner.py: the Python code that drives each test invocation
 |   |
 |   +-- tests/: regression tests for Krabcake; each is compiled atop rustc and then run atop valgrind, checking the normalized output against the provided stderr file.
+|   |
+|   +-- test_dependencies/: utility macros and methods for interacting with the Valgrind Krabcake tool, such as `kc_borrow_mut!` (see "KSAN is not yet done" below) or `print_tag_of`.
+|
 |
 |              (valgrind build products are installed into the locations below.)
 +-- bin/     : `valgrind` is here, as well as other utilities
@@ -162,10 +165,12 @@ Project layout diagram:
 +-- krabcake-rustc/ (not yet done): this is where the fork of rustc that holds the KSAN support will go.
 ```
 
-The main thing we want to emphasize about the above diagram is that the bulk of development should happen in one of three places:
+The main thing we want to emphasize about the above diagram is that the bulk of development should happen in one of four places:
 
-* krabcake-vg/krabcake/rs_hello
-
+* `krabcake-vg/krabcake/rs_hello`: this is where the "business logic" resides. It handles the core checks (e.g. that an access via a `&mut`-reference actually has the right to perform that operation). It also handles creating initial shadow state values (and computing new shadow state values from existing ones), and all other Krabcake client request implementations (for example, we currently have operations that allow one to extract the tag associated with a pointer-value, or the item-stack associated with a memory address)
+* `krabcake-vg/krabcake/kc_main.c`: contains 1. entry point, 2. the VEX-to-VEX transformation logic (whose generated code sometimes include calls dispatching to functions in `rs_hello/`), and 3. a client request shim that dispatches to routines in `rs_hello/`.
+* `kc/test_dependencies/`: the macros and utility methods here provide a way for the regression tests to communicate with the Valgrind Krabcake tool. They follow procotols are shared with the client requests in `rs_hello/`.
+* `krabcake-rustc/`: not yet provided (see "KSAN is not yet done" below), but will eventually be a fork of `rustc` that will inject the client request interactions that are today instead provided manual invocations of macros and methods provided by `kc/test_dependencies/`.
 
 ### KSAN is not yet done
 
