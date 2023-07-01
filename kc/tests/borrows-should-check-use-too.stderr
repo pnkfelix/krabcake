@@ -1,27 +1,32 @@
 lib.rs: normalizing output...
 Hello world (from `rs_hello/src/lib.rs`)!
 kc_main.c: dispatching code 4b43000a
-print_stack_of `l` (0x10000000), no stack found
+print_stack_of `l_0` (0x10000000), no stack found
 kc_main.c: dispatching code 4b430000
 lib.rs: handle client request BORROW_MUT. borrowing_addr: 0x10000000
+kc_main.c: dispatching code 4b43000a
+print_stack_of `l_1` (0x10000000): [Unique(1)]
 kc_main.c: dispatching code 4b430002
 lib.rs: handle client request AS_RAW. borrowing_addr: 0x10000000
 kc_main.c: dispatching code 4b43000a
-print_stack_of `l` (0x10000000): [Unique(1), SharedRW]
+print_stack_of `l_2` (0x10000000): [Unique(1), SharedRW]
 kc_main.c: dispatching code 4b430000
 lib.rs: handle client request BORROW_MUT. borrowing_addr: 0x10000000
 kc_main.c: dispatching code 4b430009
-print_tag_of `arg1` (0x10000000): 2
+print_tag_of `y` (0x10000000): 2
 kc_main.c: dispatching code 4b43000a
-print_stack_of `l` (0x10000000): [Unique(1), SharedRW, Unique(2)]
+print_stack_of `l_3` (0x10000000): [Unique(1), SharedRW, Unique(2)]
 kc_main.c: dispatching code 4b430000
 lib.rs: handle client request BORROW_MUT. borrowing_addr: 0x10000000
 kc_main.c: dispatching code 4b430009
-print_tag_of `arg2` (0x10000000): 3
+print_tag_of `z` (0x10000000): 3
 kc_main.c: dispatching code 4b43000a
-print_stack_of `l` (0x10000000): [Unique(1), SharedRW, Unique(3)]
+print_stack_of `l_4` (0x10000000): [Unique(1), SharedRW, Unique(3)]
+ALERT could not find tag in stack for address 0x10000000 even though we are accessing it via pointer with tag 2
 kc_main.c: dispatching code 4b43000a
-print_stack_of `l` (0x10000000): [Unique(1), SharedRW, Unique(3)]
+print_stack_of `l_5` (0x10000000): []
 ALERT could not find tag in stack for address 0x10000000 even though we are accessing it via pointer with tag 2
-ALERT could not find tag in stack for address 0x10000000 even though we are accessing it via pointer with tag 3
-ALERT could not find tag in stack for address 0x10000000 even though we are accessing it via pointer with tag 2
+kc_main.c: dispatching code 4b43000a
+print_stack_of `l_6` (0x10000000): []
+kc_main.c: dispatching code 4b43000a
+print_stack_of `l_7` (0x10000000): []
