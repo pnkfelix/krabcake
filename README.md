@@ -130,6 +130,14 @@ While Valgrind is very much a C project, the Krabcake developers are Rust progra
 
 Project layout diagram:
 
+<!--
+
+Keep the ascii-art below restricted to 80 columns in width
+
+00000000011111111112222222222333333333444444444445555555555666666666677777777778
+12345678901234567890123456789012345678901234567890123456789012345678901234567890
+-->
+
 ```
 * Krabcake: the root of the project
 |
@@ -151,18 +159,27 @@ Project layout diagram:
 |   |
 |   +-- runner.py: the Python code that drives each test invocation
 |   |
-|   +-- tests/: regression tests for Krabcake; each is compiled atop rustc and then run atop valgrind, checking the normalized output against the provided stderr file.
+|   +-- tests/: regression tests for Krabcake; each is compiled atop rustc and
+|   |           then run atop valgrind, checking the normalized output against
+|   |           the provided stderr file.
 |   |
-|   +-- test_dependencies/: utility macros and methods for interacting with the Valgrind Krabcake tool, such as `kc_borrow_mut!` (see "KSAN is not yet done" below) or `print_tag_of`.
+|   +-- test_dependencies/: utility macros and methods for interacting with the
+|                           Valgrind Krabcake tool, such as `kc_borrow_mut!`
+|                           (see "KSAN is not yet done") or `print_tag_of`.
 |
 |
 |              (valgrind build products are installed into the locations below.)
+|
 +-- bin/     : `valgrind` is here, as well as other utilities
-+-- libexec/ : The architecture-specific tools (e.g. krabcake-amd64-linux, krabcake-x86-linux) are here.
+|
++-- libexec/ : The architecture-specific tools (e.g. krabcake-amd64-linux,
+|              krabcake-x86-linux) are here.
 +-- include/ : Various C header files are here
+|
 +-- lib/     : Various static archives are here
 |
-+-- krabcake-rustc/ (not yet done): this is where the fork of rustc that holds the KSAN support will go.
++-- krabcake-rustc/ (not yet done): this is where the fork of rustc that holds
+                                    the KSAN support will go.
 ```
 
 The main thing we want to emphasize about the above diagram is that the bulk of development should happen in one of four places:
