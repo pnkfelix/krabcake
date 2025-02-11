@@ -84,9 +84,14 @@ test: $(KC_BINS)
 # Originally `make go` had a demo file associated with it. And I want to
 # make that the case again, once we have the whole pipeline set up with
 # a patched rustc
-go: $(KC_BINS)
-	rustc -C opt-level=2 baseline.rs
+go: $(KC_BINS) baseline
 	./bin/valgrind -q --tool=krabcake ./baseline
+
+rr: $(KC_BINS) baseline
+	rr record -n ./bin/valgrind -q --tool=krabcake ./baseline
+
+baseline: baseline.rs
+	rustc -C opt-level=2 baseline.rs
 
 $(KC_BINS): $(INCLUDE_HDRS) $(wildcard $(KC_SRC)/*) $(KC_RS)
 	cd $(VG_SRC_ROOT) && $(MAKE) && $(MAKE) install
