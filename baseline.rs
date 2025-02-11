@@ -10,9 +10,9 @@ mod test_dependencies {
 }
 
 pub fn main() {
-    println!("Hello world (from `sb_rs_port/main.rs`)!");
+    println!("baseline.rs: Hello world!");
     println!(
-        "BorrowMut is {:x}",
+        "baseline.rs: BorrowMut is {:x}",
         test_dependencies::VgKrabcakeClientRequest::BorrowMut as u32
     );
 
@@ -32,6 +32,6 @@ pub fn main() {
     // Note: I didn't see a load against `y` above without a use
     // of `end` here. It would be nice to avoid requiring that,
     // but maybe such is life in release mode. Look into it.
-    println!("Goodbye world, end: {}!", end);
+    println!("baseline.rs: Goodbye world, end: {}!", end);
 }
 
